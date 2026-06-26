@@ -1,0 +1,16 @@
+class Solution {
+    public int minOperations(int[] nums) {
+        for (int x : nums) {
+            if (x != nums[0]) {
+                return 1;
+            }
+        }
+        return 0;
+    }
+}
+OUTPUT:
+Input: [1,2]
+→ Not equal → Answer = 1
+
+Input: [5,5,5]
+→ Already equal → Answer = 0
