@@ -1,0 +1,38 @@
+import java.util.*;
+
+class Solution {
+    public int[][] outerTrees(int[][] trees) {
+        Arrays.sort(trees, (a, b) -> a[0] == b[0] ? a[1] - b[1] : a[0] - b[0]);
+
+        List<int[]> hull = new ArrayList<>();
+
+        // lower hull
+        for (int[] p : trees) {
+            while (hull.size() >= 2 && cross(hull.get(hull.size()-2), hull.get(hull.size()-1), p) < 0) {
+                hull.remove(hull.size() - 1);
+            }
+            hull.add(p);
+        }
+
+        int t = hull.size() + 1;
+
+        // upper hull
+        for (int i = trees.length - 2; i >= 0; i--) {
+            int[] p = trees[i];
+            while (hull.size() >= t && cross(hull.get(hull.size()-2), hull.get(hull.size()-1), p) < 0) {
+                hull.remove(hull.size() - 1);
+            }
+            hull.add(p);
+        }
+
+        // remove duplicate last point
+        hull.remove(hull.size() - 1);
+
+        return hull.toArray(new int[hull.size()][]);
+    }
+
+    private int cross(int[] o, int[] a, int[] b) {
+        return (a[0] - o[0]) * (b[1] - o[1]) -
+               (a[1] - o[1]) * (b[0] - o[0]);
+    }
+}
