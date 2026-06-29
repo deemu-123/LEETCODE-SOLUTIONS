@@ -1,0 +1,33 @@
+class Solution {
+    public int minAreaRect(int[][] points) {
+        Map<Integer, List<Integer>> map = new HashMap<>();
+        
+        for (int[] p : points) {
+            map.computeIfAbsent(p[0], k -> new ArrayList<>()).add(p[1]);
+        }
+
+        Map<String, Integer> lastX = new HashMap<>();
+        int minArea = Integer.MAX_VALUE;
+
+        for (int x : map.keySet()) {
+            List<Integer> ys = map.get(x);
+            Collections.sort(ys);
+
+            for (int i = 0; i < ys.size(); i++) {
+                for (int j = i + 1; j < ys.size(); j++) {
+                    String key = ys.get(i) + "," + ys.get(j);
+
+                    if (lastX.containsKey(key)) {
+                        int prevX = lastX.get(key);
+                        int area = (x - prevX) * (ys.get(j) - ys.get(i));
+                        minArea = Math.min(minArea, area);
+                    }
+
+                    lastX.put(key, x);
+                }
+            }
+        }
+
+        return minArea == Integer.MAX_VALUE ? 0 : minArea;
+    }
+}
