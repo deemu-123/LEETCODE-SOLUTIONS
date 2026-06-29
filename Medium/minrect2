@@ -1,0 +1,44 @@
+class Solution {
+    public double minAreaFreeRect(int[][] points) {
+        int n = points.length;
+        Map<String, List<int[]>> map = new HashMap<>();
+
+        for (int i = 0; i < n; i++) {
+            for (int j = i + 1; j < n; j++) {
+                int x1 = points[i][0], y1 = points[i][1];
+                int x2 = points[j][0], y2 = points[j][1];
+
+                double midX = (x1 + x2) / 2.0;
+                double midY = (y1 + y2) / 2.0;
+                double dist = Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2);
+
+                String key = midX + "," + midY + "," + dist;
+                map.computeIfAbsent(key, k -> new ArrayList<>())
+                   .add(new int[]{i, j});
+            }
+        }
+
+        double minArea = Double.MAX_VALUE;
+
+        for (List<int[]> list : map.values()) {
+            for (int i = 0; i < list.size(); i++) {
+                for (int j = i + 1; j < list.size(); j++) {
+                    int[] p1 = points[list.get(i)[0]];
+                    int[] p2 = points[list.get(i)[1]];
+                    int[] p3 = points[list.get(j)[0]];
+
+                    double side1 = dist(p1, p3);
+                    double side2 = dist(p2, p3);
+
+                    minArea = Math.min(minArea, side1 * side2);
+                }
+            }
+        }
+
+        return minArea == Double.MAX_VALUE ? 0 : minArea;
+    }
+
+    private double dist(int[] a, int[] b) {
+        return Math.sqrt(Math.pow(a[0] - b[0], 2) + Math.pow(a[1] - b[1], 2));
+    }
+}
