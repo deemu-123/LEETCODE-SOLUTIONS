@@ -1,0 +1,48 @@
+class Solution {
+    double total = 0;
+    double valid = 0;
+
+    public double getProbability(int[] balls) {
+        int sum = 0;
+        for (int b : balls) sum += b;
+
+        dfs(balls, 0, 0, 0, 0, 0, 1.0);
+        return valid / total;
+    }
+
+    void dfs(int[] balls, int i, int count1, int count2,
+             int distinct1, int distinct2, double ways) {
+
+        if (i == balls.length) {
+            if (count1 == count2) {
+                total += ways;
+                if (distinct1 == distinct2) valid += ways;
+            }
+            return;
+        }
+
+        for (int k = 0; k <= balls[i]; k++) {
+            int newCount1 = count1 + k;
+            int newCount2 = count2 + (balls[i] - k);
+
+            int newDistinct1 = distinct1 + (k > 0 ? 1 : 0);
+            int newDistinct2 = distinct2 + ((balls[i] - k) > 0 ? 1 : 0);
+
+            double comb = nCr(balls[i], k);
+
+            dfs(balls, i + 1,
+                newCount1, newCount2,
+                newDistinct1, newDistinct2,
+                ways * comb);
+        }
+    }
+
+    double nCr(int n, int r) {
+        double res = 1;
+        for (int i = 1; i <= r; i++) {
+            res *= (n - r + i);
+            res /= i;
+        }
+        return res;
+    }
+}
