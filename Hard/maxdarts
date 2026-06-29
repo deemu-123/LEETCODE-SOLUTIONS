@@ -1,0 +1,46 @@
+class Solution {
+    public int numPoints(int[][] points, int r) {
+        int n = points.length;
+        int res = 1;
+
+        for (int i = 0; i < n; i++) {
+            for (int j = i + 1; j < n; j++) {
+                double dx = points[j][0] - points[i][0];
+                double dy = points[j][1] - points[i][1];
+                double d = Math.sqrt(dx * dx + dy * dy);
+
+                if (d > 2 * r) continue;
+
+                double mx = (points[i][0] + points[j][0]) / 2.0;
+                double my = (points[i][1] + points[j][1]) / 2.0;
+
+                double h = Math.sqrt(r * r - (d / 2) * (d / 2));
+
+                double ux = -dy / d;
+                double uy = dx / d;
+
+                double cx1 = mx + ux * h;
+                double cy1 = my + uy * h;
+                double cx2 = mx - ux * h;
+                double cy2 = my - uy * h;
+
+                res = Math.max(res, count(points, cx1, cy1, r));
+                res = Math.max(res, count(points, cx2, cy2, r));
+            }
+        }
+
+        return res;
+    }
+
+    private int count(int[][] points, double cx, double cy, int r) {
+        int cnt = 0;
+        for (int[] p : points) {
+            double dx = p[0] - cx;
+            double dy = p[1] - cy;
+            if (dx * dx + dy * dy <= r * r + 1e-6) {
+                cnt++;
+            }
+        }
+        return cnt;
+    }
+}
