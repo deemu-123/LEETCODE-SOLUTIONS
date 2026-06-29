@@ -1,0 +1,48 @@
+class Solution {
+    double res = 0, total = 0;
+
+    public double getProbability(int[] balls) {
+        int sum = 0;
+        for (int b : balls) sum += b;
+
+        dfs(balls, 0, 0, 0, 0, 0, sum / 2, 1.0);
+        return res / total;
+    }
+
+    private void dfs(int[] balls, int i, int count1, int count2,
+                     int distinct1, int distinct2,
+                     int half, double ways) {
+
+        if (i == balls.length) {
+            if (count1 == half && count2 == half) {
+                total += ways;
+                if (distinct1 == distinct2) {
+                    res += ways;
+                }
+            }
+            return;
+        }
+
+        for (int k = 0; k <= balls[i]; k++) {
+            int l = balls[i] - k;
+
+            if (count1 + k > half || count2 + l > half) continue;
+
+            dfs(balls, i + 1,
+                count1 + k,
+                count2 + l,
+                distinct1 + (k > 0 ? 1 : 0),
+                distinct2 + (l > 0 ? 1 : 0),
+                half,
+                ways * comb(balls[i], k));
+        }
+    }
+
+    private double comb(int n, int k) {
+        double res = 1;
+        for (int i = 1; i <= k; i++) {
+            res = res * (n - i + 1) / i;
+        }
+        return res;
+    }
+}
