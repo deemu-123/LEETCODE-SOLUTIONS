@@ -1,0 +1,15 @@
+class Solution {
+    public boolean isBoomerang(int[][] points) {
+        int[] a = points[0];
+        int[] b = points[1];
+        int[] c = points[2];
+
+        int x1 = b[0] - a[0];
+        int y1 = b[1] - a[1];
+        int x2 = c[0] - b[0];
+        int y2 = c[1] - b[1];
+
+        // cross product != 0 means not collinear
+        return x1 * y2 != y1 * x2;
+    }
+}
