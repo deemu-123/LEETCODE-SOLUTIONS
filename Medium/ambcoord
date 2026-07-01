@@ -1,0 +1,54 @@
+import java.util.*;
+
+class Solution {
+    public List<String> ambiguousCoordinates(String s) {
+        List<String> res = new ArrayList<>();
+        int n = s.length();
+
+        // remove outer brackets "(123)" -> "123"
+        s = s.substring(1, n - 1);
+
+        for (int i = 1; i < s.length(); i++) {
+            List<String> left = build(s.substring(0, i));
+            List<String> right = build(s.substring(i));
+
+            for (String l : left) {
+                for (String r : right) {
+                    res.add("(" + l + ", " + r + ")");
+                }
+            }
+        }
+
+        return res;
+    }
+
+    private List<String> build(String s) {
+        List<String> list = new ArrayList<>();
+        int n = s.length();
+
+        // no decimal case
+        if (isValidInt(s)) {
+            list.add(s);
+        }
+
+        // decimal cases
+        for (int i = 1; i < n; i++) {
+            String left = s.substring(0, i);
+            String right = s.substring(i);
+
+            if (isValidInt(left) && isValidFrac(right)) {
+                list.add(left + "." + right);
+            }
+        }
+
+        return list;
+    }
+
+    private boolean isValidInt(String s) {
+        return s.equals("0") || (s.charAt(0) != '0');
+    }
+
+    private boolean isValidFrac(String s) {
+        return s.charAt(s.length() - 1) != '0';
+    }
+}
